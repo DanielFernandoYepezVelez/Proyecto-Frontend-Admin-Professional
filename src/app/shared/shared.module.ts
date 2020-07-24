@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 /* Aqui No Estoy Utilizando El Router-Outlet, Por Ende No Es Necesario
 El RouterModule */
@@ -11,7 +12,7 @@ import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [BreadcrumbsComponent, SidebarComponent, HeaderComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   exports: [BreadcrumbsComponent, SidebarComponent, HeaderComponent],
 })
 export class SharedModule {}

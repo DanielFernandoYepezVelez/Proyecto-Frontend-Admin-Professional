@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { SettingsService } from '../services/settings.service';
+
+// tslint:disable-next-line: max-line-length
+/* Existe Una Función Declarada De Forma Global Y Se Lo Digo A TypeScript Para Que No Me Muestre Un Error, En La Función Del ngOnInit (Se Pueden Pasar Argumentos o Parametros) */
+declare function customInitFunctions();
 
 @Component({
   selector: 'app-pages',
@@ -8,7 +13,9 @@ import { Component, OnInit } from '@angular/core';
 export class PagesComponent implements OnInit {
   year = new Date().getFullYear();
 
-  constructor() {}
+  constructor(private settingService: SettingsService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    customInitFunctions();
+  }
 }
