@@ -32,6 +32,8 @@ export class PromesasComponent implements OnInit {
   }
 
   /* Retornando Una Promesa Manual */
+  // tslint:disable-next-line: max-line-length
+  /* Dentro de una promesa puedo ejecutar peticiones que resuelven otras promesas y solo se van a ejecutar con el resolve de la promesa creada manualmente. */
   getUsuarios() {
     return new Promise((resolve) => {
       fetch('https://reqres.in/api/users')

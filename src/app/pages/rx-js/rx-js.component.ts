@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, interval } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, interval, Subscription } from 'rxjs';
 import { retry, take, map, filter } from 'rxjs/operators';
 
 @Component({
@@ -7,7 +7,9 @@ import { retry, take, map, filter } from 'rxjs/operators';
   templateUrl: './rx-js.component.html',
   styles: [],
 })
-export class RxJSComponent implements OnInit {
+export class RxJSComponent implements OnInit, OnDestroy {
+  intervalSubs: Subscription;
+
   /* Aqui estamos creando un observable de forma manual */
   /* Me srive para crear mis propios observables dependiendo de las necesidades o requerimientos de un proyecto */
 
@@ -28,7 +30,7 @@ export class RxJSComponent implements OnInit {
     ); */
 
     this.retornaObservable()
-      .pipe(retry(1))
+      .pipe(/* retry(1) */)
       .subscribe(
         (valor) => console.log('Subs:', valor),
         (err) => console.log('Error:', err),
@@ -37,7 +39,14 @@ export class RxJSComponent implements OnInit {
 
     // this.retornaObservableIntervalo().subscribe((valor) => console.log(valor));
     /* Cuando el argumento recibido, es enviado directamente a otra función se puede aplicar lo siguiente */
-    this.retornaObservableIntervalo().subscribe(console.log);
+    this.intervalSubs = this.retornaObservableIntervalo().subscribe(
+      console.log
+    );
+  }
+
+  /* Al Destruir El Componente, Se Suspende La Suscripción Al Observable */
+  ngOnDestroy(): void {
+    this.intervalSubs.unsubscribe();
   }
 
   retornaObservableIntervalo(): Observable<string | number> {
