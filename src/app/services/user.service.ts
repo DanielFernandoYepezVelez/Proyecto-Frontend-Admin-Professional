@@ -1,20 +1,22 @@
+import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { tap, map, catchError } from 'rxjs/operators';
 
 /* Interfaces */
-import { IRegister } from '../interfaces/register.interface';
 import { ILogin } from '../interfaces/login.interface';
+import { IRegister } from '../interfaces/register.interface';
 
 /* Ambiente */
-import { environment } from '../../environments/environment';
 const base_url = environment.base_url;
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   createUser(formData: IRegister) {
     /* Cambiar La Mutabilidad Del Objeto */
@@ -36,8 +38,48 @@ export class UserService {
 
     return this.http.post(`${base_url}/login`, newDataNeed).pipe(
       tap((res: any) => {
-        localStorage.setItem('token', JSON.stringify(res.tokenUser));
+        localStorage.setItem('token', res.token);
       })
     );
+  }
+
+  loginUserGoogle(token) {
+    return this.http
+      .post(`${base_url}/login/loginGoogle`, { google_token: token })
+      .pipe(
+        tap((res: any) => {
+          // console.log(res);
+          localStorage.setItem('token', res.token);
+        })
+      );
+  }
+
+  /* Aqui Lo Validamos Y Lo Renovamos */
+  validarToken(): Observable<boolean> {
+    const token = localStorage.getItem('token') || '';
+
+    return this.http
+      .get(`${base_url}/login/renewToken`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .pipe(
+        tap((res: any) => {
+          if (res.ok === true) {
+            localStorage.setItem('token', res.token);
+          }
+        }),
+        map((res: any) => {
+          // console.log(res);
+          return res.ok;
+        }),
+        catchError((error) => of(false))
+      );
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.router.navigateByUrl('/login');
   }
 }

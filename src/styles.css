@@ -10,3 +10,7 @@
 #themecolors .selector {
     cursor: pointer;
 }
+
+.cursorLogout {
+    cursor: pointer !important;
+}

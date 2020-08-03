@@ -294,8 +294,8 @@
                                 <a routerLink="account-settings"><i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
-                            <li>
-                                <a routerLink="/login"><i class="fa fa-power-off"></i> Logout</a>
+                            <li class="cursorLogout">
+                                <a (click)="logout()" class="cursorLogout"><i class="fa fa-power-off"></i> Logout</a>
                             </li>
                         </ul>
                         </div>
