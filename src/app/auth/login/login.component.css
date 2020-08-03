@@ -43,6 +43,11 @@ Login register and recover password Page
     position: fixed;
 }
 
+.check-check {
+    width: 1rem;
+    height: 1rem;
+}
+
 .login-box {
     width: 400px;
     margin: 0 auto;
