@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -104,16 +105,10 @@ export class LoginComponent implements OnInit {
     this.startApp();
   }
 
-  startApp() {
-    gapi.load('auth2', () => {
-      // Retrieve the singleton for the GoogleAuth library and set up the client.
-      this.auth2 = gapi.auth2.init({
-        client_id:
-          '24949782543-qggl9q7i27ohmb15sb0p33v1435fjbgg.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-      });
-      this.attachSignin(document.getElementById('my-signin2'));
-    });
+  async startApp() {
+    await this.userService.googleInit();
+    this.auth2 = this.userService.auth2;
+    this.attachSignin(document.getElementById('my-signin2'));
   }
 
   attachSignin(element) {
@@ -122,9 +117,13 @@ export class LoginComponent implements OnInit {
       {},
       (googleUser) => {
         const id_token = googleUser.getAuthResponse().id_token;
-        this.userService
-          .loginUserGoogle(id_token)
-          .subscribe((res) => this.router.navigateByUrl('/'));
+        this.userService.loginUserGoogle(id_token).subscribe((res) => {
+          // tslint:disable-next-line: max-line-length
+          /* Cuando Liberias De Terceros O Que Estan Por Fuera De Angular Se Encargan De Disparar La Navegación En La Aplicación Se Tiene Que Utilizar El NgZone() (attachClickHandler => libreriaDeTerceros(google))*/
+          this.ngZone.run(() => {
+            this.router.navigateByUrl('/');
+          });
+        });
       },
       (error) => {
         alert(JSON.stringify(error, undefined, 2));
