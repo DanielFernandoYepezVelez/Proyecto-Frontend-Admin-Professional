@@ -1,7 +1,7 @@
-import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 
 /* Interfaces */
@@ -32,6 +32,14 @@ export class UserService {
     this.googleInit();
   }
 
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
+
+  get idUser(): string {
+    return this.user.id || '';
+  }
+
   createUser(formData: IRegister) {
     /* Cambiar La Mutabilidad Del Objeto */
     const newDataNeed: IRegister = {
@@ -41,6 +49,19 @@ export class UserService {
     };
 
     return this.http.post(`${base_url}/newUser`, newDataNeed);
+  }
+
+  updateProfile(formData: { name: string; email: string; role: string }) {
+    formData = {
+      ...formData,
+      role: this.user.role,
+    };
+
+    return this.http.put(`${base_url}/updateUser/${this.idUser}`, formData, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    });
   }
 
   loginUser(formData: ILogin) {
@@ -70,22 +91,20 @@ export class UserService {
 
   /* Aqui Lo Validamos Y Lo Renovamos */
   validarToken(): Observable<boolean> {
-    const token = localStorage.getItem('token') || '';
-
     return this.http
       .get(`${base_url}/login/renewToken`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${this.token}`,
         },
       })
       .pipe(
-        tap((res: any) => {
+        map((res: any) => {
           if (res.ok === true) {
             const {
               id,
               name,
               email,
-              img,
+              img = '',
               google,
               role,
               activate,
@@ -105,10 +124,8 @@ export class UserService {
             );
             localStorage.setItem('token', res.token);
           }
-        }),
-        map((res: any) => {
-          // console.log(res);
-          return res.ok;
+
+          return true;
         }),
         catchError((error) => of(false))
       );

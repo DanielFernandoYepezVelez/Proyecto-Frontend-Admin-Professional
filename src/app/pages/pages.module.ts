@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /* Para Utilizar El Router-Outlet En El Module De Pages; De Dos Formas
 (POR QUE AQUI, ESTOY UTILIZANDO EL router-outlet)*/
@@ -20,6 +20,7 @@ import { PagesComponent } from './pages.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RxJSComponent } from './rx-js/rx-js.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { RxJSComponent } from './rx-js/rx-js.component';
     AccountSettingsComponent,
     PromesasComponent,
     RxJSComponent,
+    PerfilComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +39,7 @@ import { RxJSComponent } from './rx-js/rx-js.component';
     RouterModule /* AppRoutingModule */,
     FormsModule,
     ComponentsModule,
+    ReactiveFormsModule,
   ],
   exports: [
     DashboardComponent,
