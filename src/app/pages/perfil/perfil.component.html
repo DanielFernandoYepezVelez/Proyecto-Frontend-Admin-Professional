@@ -32,10 +32,11 @@
                 <h4 class="card-title">Avatar</h4>
                 <h6 class="card-subtitle">Imagen Del Usuario</h6>
                 <img src="" alt="">
-                <input type="file" name="" id="">
+                <input type="file" name="#" id="#" (change)="selectImage($event.target.files[0])">
                 <br>
                 <br>
-                <button class="btn btn-block btn-success waves-effect waves-light m-r-10"><i class="fa fa-save"></i>
+                <button (click)="imgLoading()" class="btn btn-block btn-success waves-effect waves-light m-r-10" [disabled]="!imgUpload"><i
+            class="fa fa-save"></i>
           Cambiar Imagen</button>
             </div>
         </div>
