@@ -10,11 +10,9 @@ import { User } from 'src/app/auth/models/user.model';
   styles: [],
 })
 export class HeaderComponent {
-  public imgUrl = '';
   public user: User;
 
   constructor(private userService: UserService) {
-    this.imgUrl = this.userService.user.imageUrl;
     this.user = userService.user;
   }
 

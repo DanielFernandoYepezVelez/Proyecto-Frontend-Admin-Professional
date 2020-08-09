@@ -12,7 +12,6 @@ import { UserService } from '../../services/user.service';
 })
 export class SidebarComponent implements OnInit {
   public user: User;
-  public imgUrl = '';
   public menuItems: any[];
 
   constructor(
@@ -20,7 +19,6 @@ export class SidebarComponent implements OnInit {
     private userService: UserService
   ) {
     this.menuItems = this.sidebarService.menu;
-    this.imgUrl = this.userService.user.imageUrl;
     this.user = this.userService.user;
   }
 

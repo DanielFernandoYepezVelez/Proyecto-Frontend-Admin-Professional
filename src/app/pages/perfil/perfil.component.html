@@ -31,12 +31,16 @@
             <div class="card-body">
                 <h4 class="card-title">Avatar</h4>
                 <h6 class="card-subtitle">Imagen Del Usuario</h6>
-                <img src="" alt="">
+
+                <div class="text-center">
+                    <img *ngIf="!imgTemp" [src]="user.imageUrl" alt="img-avatar" class="img-avatar">
+                    <img *ngIf="imgTemp" [src]="imgTemp" alt="img-avatar-Temp" class="img-avatar">
+                </div>
+
                 <input type="file" name="#" id="#" (change)="selectImage($event.target.files[0])">
                 <br>
                 <br>
-                <button (click)="imgLoading()" class="btn btn-block btn-success waves-effect waves-light m-r-10" [disabled]="!imgUpload"><i
-            class="fa fa-save"></i>
+                <button (click)="imgLoading()" class="btn btn-block btn-success waves-effect waves-light m-r-10" [disabled]="!imgUpload"><i class="fa fa-save"></i>
           Cambiar Imagen</button>
             </div>
         </div>
