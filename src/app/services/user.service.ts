@@ -7,6 +7,7 @@ import { tap, map, catchError } from 'rxjs/operators';
 /* Interfaces */
 import { ILogin } from '../interfaces/login.interface';
 import { IRegister } from '../interfaces/register.interface';
+import { GetUser } from '../interfaces/user.interface';
 
 /* Clase Modelo(Tipo Interface) */
 import { User } from '../auth/models/user.model';
@@ -40,6 +41,14 @@ export class UserService {
     return this.user.id || '';
   }
 
+  get headers() {
+    return {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    };
+  }
+
   createUser(formData: IRegister) {
     /* Cambiar La Mutabilidad Del Objeto */
     const newDataNeed: IRegister = {
@@ -57,11 +66,11 @@ export class UserService {
       role: this.user.role,
     };
 
-    return this.http.put(`${base_url}/updateUser/${this.idUser}`, formData, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    });
+    return this.http.put(
+      `${base_url}/updateUser/${this.idUser}`,
+      formData,
+      this.headers
+    );
   }
 
   loginUser(formData: ILogin) {
@@ -91,44 +100,38 @@ export class UserService {
 
   /* Aqui Lo Validamos Y Lo Renovamos */
   validarToken(): Observable<boolean> {
-    return this.http
-      .get(`${base_url}/login/renewToken`, {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
-      .pipe(
-        map((res: any) => {
-          if (res.ok === true) {
-            const {
-              id,
-              name,
-              email,
-              img = '',
-              google,
-              role,
-              activate,
-              created_at,
-            } = res.user[0];
+    return this.http.get(`${base_url}/login/renewToken`, this.headers).pipe(
+      map((res: any) => {
+        if (res.ok === true) {
+          const {
+            id,
+            name,
+            email,
+            img = '',
+            google,
+            role,
+            activate,
+            created_at,
+          } = res.user[0];
 
-            this.user = new User(
-              name,
-              email,
-              '',
-              id,
-              img,
-              role,
-              google,
-              activate,
-              created_at
-            );
-            localStorage.setItem('token', res.token);
-          }
+          this.user = new User(
+            name,
+            email,
+            '',
+            id,
+            img,
+            role,
+            google,
+            activate,
+            created_at
+          );
+          localStorage.setItem('token', res.token);
+        }
 
-          return true;
-        }),
-        catchError((error) => of(false))
-      );
+        return true;
+      }),
+      catchError((error) => of(false))
+    );
   }
 
   /* ESTO ES REALMENTE VALIOSO E IMPORTANTE PROMESAS Y OBSERVABLES */
@@ -162,5 +165,10 @@ export class UserService {
         this.router.navigateByUrl('/login');
       });
     });
+  }
+
+  getAllUsers(desde: number = 0) {
+    const url = `${base_url}/users?desde=${desde}`;
+    return this.http.get<GetUser>(url, this.headers);
   }
 }

@@ -11,6 +11,9 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxJSComponent } from './rx-js/rx-js.component';
 import { PerfilComponent } from './perfil/perfil.component';
 
+/* Components Administracion */
+import { UsersComponent } from './administracion/users/users.component';
+
 /* Guards */
 import { AuthGuard } from '../guards/auth.guard';
 
@@ -46,6 +49,13 @@ const routes: Routes = [
         path: 'perfil',
         component: PerfilComponent,
         data: { titulo: 'Perfil De Usuario' },
+      },
+
+      /* Administracion */
+      {
+        path: 'usuarios',
+        component: UsersComponent,
+        data: { titulo: 'Usuarios De Aplicacion' },
       },
     ],
   },
