@@ -1,8 +1,9 @@
 import { Router } from '@angular/router';
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+
 import { Observable, of } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
+import { tap, map, catchError, delay } from 'rxjs/operators';
 
 /* Interfaces */
 import { ILogin } from '../interfaces/login.interface';
@@ -167,8 +168,37 @@ export class UserService {
     });
   }
 
+  /* Aqui Estoy Transformando La Data Para Obtener El Avatar Del Usuario A Través De Instanciar Mi Modelo */
   getAllUsers(desde: number = 0) {
     const url = `${base_url}/users?desde=${desde}`;
-    return this.http.get<GetUser>(url, this.headers);
+    return this.http.get<GetUser>(url, this.headers).pipe(
+      // delay(1000),
+      map((resp: GetUser) => {
+        const usersFinal = resp.users.map(
+          (user) =>
+            new User(
+              user.name,
+              user.email,
+              '',
+              user.id,
+              user.img,
+              user.role,
+              user.google,
+              user.activate,
+              new Date()
+            )
+        );
+
+        return {
+          totalUsers: resp.totalUsers[0].Total,
+          usersFinal,
+        };
+      })
+    );
+  }
+
+  deleteUser(user: User) {
+    const url = `${base_url}/deleteUser/${user.id}`;
+    return this.http.delete(url, this.headers);
   }
 }
