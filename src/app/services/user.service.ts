@@ -201,4 +201,18 @@ export class UserService {
     const url = `${base_url}/deleteUser/${user.id}`;
     return this.http.delete(url, this.headers);
   }
+
+  saveRoleUser(user: User) {
+    const newRole = {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    return this.http.put(
+      `${base_url}/updateUser/${user.id}`,
+      newRole,
+      this.headers
+    );
+  }
 }
