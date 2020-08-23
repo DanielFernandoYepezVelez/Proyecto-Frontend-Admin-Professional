@@ -13,6 +13,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 
 /* Components Administracion */
 import { UsersComponent } from './administracion/users/users.component';
+import { HospitalsComponent } from './administracion/hospitals/hospitals.component';
 
 /* Guards */
 import { AuthGuard } from '../guards/auth.guard';
@@ -55,7 +56,12 @@ const routes: Routes = [
       {
         path: 'usuarios',
         component: UsersComponent,
-        data: { titulo: 'Usuarios De Aplicacion' },
+        data: { titulo: 'Administración De Usuarios' },
+      },
+      {
+        path: 'hospitales',
+        component: HospitalsComponent,
+        data: { titulo: 'Administración De Hospitales' },
       },
     ],
   },
