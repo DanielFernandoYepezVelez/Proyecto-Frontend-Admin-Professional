@@ -13,7 +13,9 @@ export class HospitalsComponent implements OnInit {
 
   constructor(private hospitalService: HospitalService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getHospitals();
+  }
 
   getHospitals() {
     this.cargando = true;
